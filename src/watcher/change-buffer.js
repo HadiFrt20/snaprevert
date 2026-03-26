@@ -21,6 +21,7 @@ class ChangeBuffer {
     this.changes = new Map(); // filePath -> { type, filePath }
     this.timer = null;
     this.fileContents = new Map(); // Cache of file contents at last snapshot
+    this.lastNumber = 0; // Monotonic counter to avoid duplicate numbers
   }
 
   add(type, filePath) {
@@ -153,8 +154,9 @@ class ChangeBuffer {
 
   getNextNumber() {
     const snapshots = listSnapshots(this.projectDir);
-    if (snapshots.length === 0) return 1;
-    return Math.max(...snapshots.map((s) => s.number || 0)) + 1;
+    const maxOnDisk = snapshots.length === 0 ? 0 : Math.max(...snapshots.map((s) => s.number || 0));
+    this.lastNumber = Math.max(this.lastNumber, maxOnDisk) + 1;
+    return this.lastNumber;
   }
 
   /**

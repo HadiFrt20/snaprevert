@@ -122,7 +122,7 @@ describe('Snapshot Lifecycle (manual via ChangeBuffer)', () => {
 
     const remaining = listSnapshots(project.dir);
     expect(remaining).toHaveLength(2);
-    expect(remaining.map((s) => s.number)).toEqual([2, 3]);
+    expect(remaining.map((s) => s.number)).toEqual([snap2.number, snap3.number]);
 
     // Verify data integrity of remaining snapshots
     const loaded2 = loadSnapshot(project.dir, snap2.name);
