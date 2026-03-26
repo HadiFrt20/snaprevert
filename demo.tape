@@ -11,96 +11,103 @@ Set Padding 15
 Set TypingSpeed 35ms
 Set CursorBlink false
 
-# Hidden: run setup script, cd into project, set PATH
+# Hidden setup
 Hide
 Type "source /Users/hadi.farhat/Documents/Explore/snaprevert/scripts/demo-init.sh && cd /tmp/demo-app && export PATH=/Users/hadi.farhat/Documents/Explore/snaprevert/scripts:$PATH && clear"
 Enter
 Sleep 2s
 Show
 
-# --- Show project ---
-Type "ls"
-Enter
-Sleep 1.5s
-
+# --- SCENE 1: Show project, start snaprevert ---
 Type "cat app.js"
-Enter
-Sleep 2.5s
-
-# --- Start snaprevert ---
-Type "snaprevert snap --label 'v1: working express app'"
 Enter
 Sleep 2s
 
 Type "snaprevert watch &"
 Enter
-Sleep 2.5s
-
+Sleep 2s
 Type "clear"
 Enter
 Sleep 500ms
 
-# --- Claude adds auth ---
-Type "claude -p 'add authentication with login route and middleware'"
+# --- SCENE 2: Open Claude Code, ask it to add auth ---
+Type "claude"
 Enter
-Sleep 3.5s
+Sleep 1.5s
 
-Type "ls"
+Type "add authentication with login route and JWT middleware"
 Enter
-Sleep 2s
+Sleep 4s
 
+# Exit Claude
+Type "/exit"
+Enter
+Sleep 1s
+
+# Let snaprevert catch the changes
 Sleep 4s
 
 Type "snaprevert list"
 Enter
 Sleep 3s
 
-# --- Claude breaks things ---
-Type "claude -p 'refactor the entire project to TypeScript'"
+# --- SCENE 3: Open Claude again, bad refactor ---
+Type "claude"
 Enter
-Sleep 3.5s
+Sleep 1.5s
 
+Type "refactor everything to TypeScript"
+Enter
+Sleep 4s
+
+Type "/exit"
+Enter
+Sleep 1s
+
+# Show the damage
 Type "cat app.js"
 Enter
-Sleep 2.5s
-
-Type "ls"
-Enter
 Sleep 2s
 
-Sleep 4s
-
-Type "snaprevert list"
-Enter
-Sleep 3s
-
-# --- Rollback ---
-Type "# config.js gone. auth.js gone. app.js broken. Roll it back."
-Enter
-Sleep 2s
-
-Type "snaprevert back 2 --yes"
-Enter
-Sleep 2.5s
-
-# --- Verify restore ---
 Type "ls"
 Enter
 Sleep 1.5s
 
-Type "cat app.js"
+# Let snaprevert catch it
+Sleep 4s
+
+Type "snaprevert list"
+Enter
+Sleep 3s
+
+# --- SCENE 4: Selective rollback (v0.2 feature) ---
+Type "# auth.js is gone, app.js is broken. But middleware.js is fine."
+Enter
+Sleep 1.5s
+
+Type "snaprevert back 2 --only app.js,auth.js --yes"
 Enter
 Sleep 2.5s
+
+Type "cat app.js"
+Enter
+Sleep 2s
 
 Type "cat auth.js"
 Enter
+Sleep 2s
+
+# --- SCENE 5: Export snapshot as git patch (v0.2 feature) ---
+Type "snaprevert export 2 --patch | head -5"
+Enter
 Sleep 2.5s
 
+# --- SCENE 6: Status with metrics (v0.2 feature) ---
 Type "snaprevert status"
 Enter
 Sleep 3s
 
-# --- Cleanup ---
+# Cleanup
 Hide
 Type "kill %1 2>/dev/null"
 Enter

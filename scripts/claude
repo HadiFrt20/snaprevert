@@ -1,17 +1,47 @@
 #!/bin/bash
-# Demo wrapper - intercepts claude -p calls and makes real file changes
-# with realistic-looking output, instantly.
+# Simulates interactive Claude Code for the VHS demo.
+# Makes REAL file changes so snaprevert captures them.
 
-shift # skip -p flag
-PROMPT="$*"
+# If called with -p, handle non-interactive mode
+if [ "$1" = "-p" ]; then
+  shift
+  PROMPT="$*"
+  if echo "$PROMPT" | grep -qi "auth"; then
+    echo " Done."
+  fi
+  exit 0
+fi
 
-if echo "$PROMPT" | grep -qi "authentication\|auth\|login"; then
-  sleep 0.5
-  echo ""
-  echo " I'll add authentication to your Express app."
-  echo ""
+# Interactive mode
+echo ""
+echo "  Claude Code v2.1.84"
+echo "  Type your request, or /exit to leave."
+echo ""
 
-  cat > auth.js << 'EOF'
+while true; do
+  printf "  > "
+  read -r INPUT
+
+  if [ -z "$INPUT" ]; then
+    continue
+  fi
+
+  if [ "$INPUT" = "/exit" ] || [ "$INPUT" = "exit" ] || [ "$INPUT" = "q" ]; then
+    echo ""
+    echo "  Goodbye!"
+    echo ""
+    exit 0
+  fi
+
+  if echo "$INPUT" | grep -qi "auth\|login\|middleware"; then
+    echo ""
+    echo "  Thinking..."
+    sleep 0.5
+    echo ""
+    echo "  I'll add authentication with password hashing and JWT middleware."
+    echo ""
+
+    cat > auth.js << 'EOF'
 const crypto = require('crypto');
 
 function hashPassword(password) {
@@ -28,7 +58,7 @@ function verifyPassword(password, salt, hash) {
 module.exports = { hashPassword, verifyPassword };
 EOF
 
-  cat > middleware.js << 'EOF'
+    cat > middleware.js << 'EOF'
 function requireAuth(req, res, next) {
   const token = req.headers.authorization;
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
@@ -38,7 +68,7 @@ function requireAuth(req, res, next) {
 module.exports = { requireAuth };
 EOF
 
-  cat > app.js << 'EOF'
+    cat > app.js << 'EOF'
 const express = require('express');
 const { requireAuth } = require('./middleware');
 const { hashPassword, verifyPassword } = require('./auth');
@@ -63,20 +93,24 @@ app.get('/', (req, res) => {
 app.listen(3000);
 EOF
 
-  sleep 0.3
-  echo " Created auth.js — password hashing with crypto"
-  echo " Created middleware.js — JWT auth middleware"
-  echo " Updated app.js — added /login and /dashboard routes"
-  echo ""
-  echo " 3 files changed (+2 new, ~1 modified)"
+    sleep 0.3
+    echo "  Write auth.js (+45 lines)"
+    echo "  Write middleware.js (+8 lines)"
+    echo "  Edit app.js (+12 lines)"
+    echo ""
+    echo "  Created auth module with password hashing, JWT middleware,"
+    echo "  and added /login + /dashboard routes to app.js."
+    echo ""
 
-elif echo "$PROMPT" | grep -qi "typescript\|TS"; then
-  sleep 0.5
-  echo ""
-  echo " I'll convert the project to TypeScript."
-  echo ""
+  elif echo "$INPUT" | grep -qi "typescript\|TS\|refactor\|convert"; then
+    echo ""
+    echo "  Thinking..."
+    sleep 0.5
+    echo ""
+    echo "  I'll convert the project to TypeScript."
+    echo ""
 
-  cat > app.js << 'EOF'
+    cat > app.js << 'EOF'
 import express, { Request, Response } from 'express';
 import { requireAuth } from './middleware';
 
@@ -89,17 +123,21 @@ app.post('/login', (req: Request, res: Response) => {
 
 EOF
 
-  rm -f config.js
-  rm -f auth.js
+    rm -f config.js
+    rm -f auth.js
 
-  sleep 0.3
-  echo " Converted app.js to TypeScript import syntax"
-  echo " Removed config.js (merged into app config)"
-  echo " Removed auth.js (needs rewrite as auth.ts)"
-  echo ""
-  echo " WARNING: middleware.js still uses CommonJS"
-  echo " 1 modified, 2 deleted"
+    sleep 0.3
+    echo "  Edit app.js (converted to TS imports)"
+    echo "  Delete config.js (merged into app config)"
+    echo "  Delete auth.js (needs rewrite as auth.ts)"
+    echo ""
+    echo "  Converted to TypeScript. Note: middleware.js still uses"
+    echo "  CommonJS — you may want to convert that too."
+    echo ""
 
-else
-  echo " Done."
-fi
+  else
+    echo ""
+    echo "  I'm a demo stub. Try asking about authentication or TypeScript."
+    echo ""
+  fi
+done
