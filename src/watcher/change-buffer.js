@@ -153,9 +153,14 @@ class ChangeBuffer {
   }
 
   getNextNumber() {
-    const snapshots = listSnapshots(this.projectDir);
-    const maxOnDisk = snapshots.length === 0 ? 0 : Math.max(...snapshots.map((s) => s.number || 0));
-    this.lastNumber = Math.max(this.lastNumber, maxOnDisk) + 1;
+    if (this.lastNumber === 0) {
+      // First call: sync with disk
+      const snapshots = listSnapshots(this.projectDir);
+      if (snapshots.length > 0) {
+        this.lastNumber = Math.max(...snapshots.map((s) => s.number || 0));
+      }
+    }
+    this.lastNumber++;
     return this.lastNumber;
   }
 

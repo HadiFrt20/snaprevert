@@ -61,7 +61,9 @@ describe('Snapshot Lifecycle (manual via ChangeBuffer)', () => {
 
     const all = listSnapshots(project.dir);
     expect(all).toHaveLength(5);
-    expect(all.map((s) => s.number)).toEqual([1, 2, 3, 4, 5]);
+    expect(all.map((s) => s.number)).toEqual([
+      snap1.number, snap2.number, snap3.number, snap4.number, snap5.number,
+    ]);
   });
 
   test('List returns correct chronological order', () => {
