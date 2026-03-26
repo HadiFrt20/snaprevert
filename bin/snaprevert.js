@@ -52,6 +52,7 @@ program
   .description('Rollback to before a snapshot')
   .option('-y, --yes', 'Skip confirmation prompt')
   .option('--dry', 'Show what would change without doing it')
+  .option('--only <files>', 'Only rollback specific files (comma-separated)')
   .action((number, opts) => {
     const back = require('../src/commands/back');
     back(number, opts);
@@ -83,6 +84,17 @@ program
   });
 
 program
+  .command('export <number>')
+  .description('Export a snapshot as a patch or JSON')
+  .option('--patch', 'Output as git-compatible unified diff (default)')
+  .option('--file <path>', 'Write output to file instead of stdout')
+  .option('--json', 'Output as JSON')
+  .action((number, opts) => {
+    const exportCmd = require('../src/commands/export');
+    exportCmd(number, opts);
+  });
+
+program
   .command('cleanup')
   .description('Prune old snapshots')
   .option('--older <duration>', 'Prune older than duration (e.g., 7d, 24h)')
@@ -91,6 +103,33 @@ program
   .action((opts) => {
     const cleanup = require('../src/commands/cleanup');
     cleanup(opts);
+  });
+
+program
+  .command('fork [number]')
+  .description('Create or manage snapshot branches')
+  .option('-l, --list', 'List all branches')
+  .option('-s, --switch <name>', 'Switch to a branch')
+  .option('-n, --name <name>', 'Name for the new branch')
+  .action((number, opts) => {
+    const fork = require('../src/commands/fork');
+    fork(number, opts);
+  });
+
+program
+  .command('review <number>')
+  .description('Interactively review and accept/reject changes per file')
+  .action((number, opts) => {
+    const review = require('../src/commands/review');
+    review(number, opts);
+  });
+
+program
+  .command('mcp')
+  .description('Start MCP server for AI agent integration')
+  .action((opts) => {
+    const mcp = require('../src/commands/mcp');
+    mcp(opts);
   });
 
 program.parse();

@@ -14,7 +14,7 @@ Instant rollback when things break. Zero config.
 [![CI](https://github.com/HadiFrt20/snaprevert/actions/workflows/ci.yml/badge.svg)](https://github.com/HadiFrt20/snaprevert/actions/workflows/ci.yml)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Tests](https://img.shields.io/badge/tests-194%20passing-brightgreen)
+![Tests](https://img.shields.io/badge/tests-221%20passing-brightgreen)
 
 </div>
 
@@ -78,8 +78,13 @@ snaprevert restore 5
 | `snaprevert list` | Show all snapshots with timestamps and labels |
 | `snaprevert diff <#>` | Show exactly what changed in a snapshot |
 | `snaprevert back <#>` | Roll back to before a snapshot |
+| `snaprevert back <#> --only file1,file2` | **NEW** Selective per-file rollback |
 | `snaprevert restore <#>` | Re-apply a rolled-back snapshot |
-| `snaprevert status` | Show current state overview |
+| `snaprevert review <#>` | **NEW** Interactive accept/reject per file |
+| `snaprevert export <#>` | **NEW** Export snapshot as git patch or JSON |
+| `snaprevert fork <#> --name exp` | **NEW** Branch from a snapshot for parallel experiments |
+| `snaprevert status` | **NEW** Rich metrics dashboard with AI tool breakdown |
+| `snaprevert mcp` | **NEW** Start MCP server for AI agent integration |
 | `snaprevert config` | View/change settings |
 | `snaprevert cleanup` | Prune old snapshots |
 
@@ -170,22 +175,58 @@ Rolled-back snapshots are preserved, never deleted. Use `snaprevert restore <#>`
 **Can I use it alongside git?**
 Yes. snaprevert ignores `.git/` and doesn't interfere with git in any way. They're complementary — snaprevert for rapid AI iterations, git for meaningful commits.
 
+## v0.2 — What's New
+
+**Per-file selective rollback** — Don't want to undo everything? Pick specific files:
+```bash
+snaprevert back 3 --only src/auth.js,src/routes.js
+```
+
+**Interactive review** — Accept or reject each file change before committing to a rollback:
+```bash
+snaprevert review 5
+# walks through each file: [a]ccept [r]eject [s]kip [v]iew
+```
+
+**AI tool detection** — Snapshots auto-detect which AI tool made the changes. Labels show `claude: modified auth.js` or `cursor: added 3 files`. Status dashboard shows a breakdown by tool.
+
+**Snapshot export** — Export any snapshot as a git-compatible patch:
+```bash
+snaprevert export 5 --patch > changes.patch
+git apply changes.patch  # apply elsewhere
+```
+
+**Snapshot branching** — Try two AI approaches from the same checkpoint:
+```bash
+snaprevert fork 3 --name "approach-a"
+# ... try one approach ...
+snaprevert fork --switch main
+# ... try another approach ...
+```
+
+**MCP server** — AI agents can create named checkpoints programmatically:
+```bash
+snaprevert mcp  # starts JSON-RPC server on stdin/stdout
+```
+Compatible with any MCP client (Claude Code, etc). Tools: `snaprevert_checkpoint`, `snaprevert_list`, `snaprevert_rollback`, `snaprevert_diff`, `snaprevert_status`.
+
 ## Architecture
 
 ```
 snaprevert/
   bin/snaprevert.js          # CLI entry (commander)
   src/
-    commands/                 # 9 CLI commands
+    commands/                 # 13 CLI commands
     storage/                  # Diff engine + snapshot store
     watcher/                  # Chokidar watcher + debounce buffer
     engine/                   # Rollback + restore algorithms
+    mcp/                      # MCP server for AI agent integration
     formatter/                # Terminal output renderers
     utils/                    # Config, labels, hashing, timing
 ```
 
 **3 runtime dependencies**: `commander`, `chalk`, `chokidar`.
-**194 tests**: 122 unit + 36 integration + 36 UAT.
+**221 tests**: unit + integration + UAT.
 **Zero config required.**
 
 ## Contributing

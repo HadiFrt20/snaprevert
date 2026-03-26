@@ -1,6 +1,6 @@
 const path = require('path');
 
-function generateLabel(changes) {
+function generateLabel(changes, tool) {
   if (!changes || changes.length === 0) {
     return 'empty snapshot';
   }
@@ -23,13 +23,21 @@ function generateLabel(changes) {
     if (added.length > 0) parts.push(`added ${added.length}`);
     if (modified.length > 0) parts.push(`modified ${modified.length}`);
     if (deleted.length > 0) parts.push(`deleted ${deleted.length}`);
-    return `${parts.join(', ')} files in ${topDir[0]}/`;
+    const summary = `${parts.join(', ')} files in ${topDir[0]}/`;
+    if (tool) {
+      return `${tool}: ${summary}`;
+    }
+    return summary;
   }
 
   // Only deletions
   if (added.length === 0 && modified.length === 0) {
     const names = deleted.map((c) => path.basename(c.filePath));
-    return `deleted ${names.join(', ')}`;
+    const delLabel = `deleted ${names.join(', ')}`;
+    if (tool) {
+      return `${tool}: ${delLabel}`;
+    }
+    return delLabel;
   }
 
   const parts = [];
@@ -47,7 +55,11 @@ function generateLabel(changes) {
     parts.push(`deleted ${names.join(', ')}`);
   }
 
-  return parts.join(', ');
+  const label = parts.join(', ');
+  if (tool) {
+    return `${tool}: ${label}`;
+  }
+  return label;
 }
 
 module.exports = { generateLabel };

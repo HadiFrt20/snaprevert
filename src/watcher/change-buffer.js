@@ -10,6 +10,7 @@ const { saveSnapshot, listSnapshots } = require('../storage/serializer');
 const { init, getSnapshotsPath } = require('../storage/store');
 const { shortId } = require('../utils/hash');
 const { generateLabel } = require('../utils/labeler');
+const { detectTool } = require('../utils/detect-tool');
 const { loadConfig } = require('../utils/config');
 
 class ChangeBuffer {
@@ -118,7 +119,8 @@ class ChangeBuffer {
 
     if (fileChanges.length === 0) return null;
 
-    const label = generateLabel(fileChanges);
+    const tool = detectTool(this.projectDir);
+    const label = generateLabel(fileChanges, tool);
 
     const meta = {
       timestamp,
@@ -126,6 +128,7 @@ class ChangeBuffer {
       name: snapshotName,
       number: this.getNextNumber(),
       label,
+      tool: tool || undefined,
       status: 'active',
       changes: fileChanges,
       deletedFiles: deletedFiles.map((d) => ({ filePath: d.filePath })),

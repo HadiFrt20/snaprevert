@@ -37,8 +37,21 @@ module.exports = async function back(number, opts) {
     return;
   }
 
+  // Parse --only option into an array of file patterns
+  const onlyFiles = opts.only
+    ? opts.only.split(',').map((f) => f.trim()).filter(Boolean)
+    : null;
+
   // Show what will be undone
-  console.log(chalk.yellow(`\n  ! this will undo ${toUndo.length} snapshot(s)\n`));
+  if (onlyFiles) {
+    console.log(chalk.yellow(`\n  ! selective rollback — only these files will be affected:\n`));
+    for (const f of onlyFiles) {
+      console.log(chalk.cyan(`    - ${f}`));
+    }
+    console.log('');
+  }
+
+  console.log(chalk.yellow(`  ! this will undo ${toUndo.length} snapshot(s)\n`));
 
   for (const snap of toUndo) {
     const files = formatFileChanges(snap.changes || []);
@@ -62,13 +75,22 @@ module.exports = async function back(number, opts) {
   }
 
   try {
-    rollback(projectDir, num);
+    const rollbackOpts = {};
+    if (onlyFiles) {
+      rollbackOpts.only = onlyFiles;
+    }
+
+    const result = rollback(projectDir, num, rollbackOpts);
 
     for (const snap of toUndo) {
       console.log(chalk.gray(`  reverting snapshot #${snap.number}... done`));
     }
 
-    console.log(chalk.green(`\n  OK rolled back to snapshot #${num}\n`));
+    if (result.partialRollback) {
+      console.log(chalk.green(`\n  OK partially rolled back to snapshot #${num}\n`));
+    } else {
+      console.log(chalk.green(`\n  OK rolled back to snapshot #${num}\n`));
+    }
     console.log(chalk.gray('  rolled-back snapshots are preserved. run ') +
       chalk.bold('snaprevert restore <#>') +
       chalk.gray(' to re-apply any of them.\n'));

@@ -1,6 +1,6 @@
 {
   "name": "snaprevert",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "The undo button for AI-assisted coding. Auto-snapshots your project, instant rollback.",
   "bin": {
     "snaprevert": "./bin/snaprevert.js"

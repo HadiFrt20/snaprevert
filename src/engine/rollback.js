@@ -10,8 +10,23 @@ const { applyDiff, reverseDiff } = require('../storage/differ');
 const { shortId } = require('../utils/hash');
 const { setCurrentState } = require('./state');
 
+/**
+ * Check if a file path matches any of the provided patterns.
+ * Supports exact matches and glob-like prefix matches
+ * (e.g., pattern "src/auth" matches "src/auth.js", "src/auth/middleware.js").
+ */
+function matchesOnly(filePath, onlyPatterns) {
+  return onlyPatterns.some((pattern) => {
+    if (filePath === pattern) return true;
+    if (filePath.startsWith(pattern)) return true;
+    return false;
+  });
+}
+
 function rollback(projectDir, targetNumber, options = {}) {
   init(projectDir);
+
+  const onlyFiles = options.only || null;
 
   const snapshots = listSnapshots(projectDir);
   const target = snapshots.find((s) => s.number === targetNumber);
@@ -36,6 +51,7 @@ function rollback(projectDir, targetNumber, options = {}) {
       filesRemoved: 0,
       filesModified: 0,
       filesRestored: 0,
+      partialRollback: !!onlyFiles,
     };
   }
 
@@ -51,6 +67,11 @@ function rollback(projectDir, targetNumber, options = {}) {
     const { meta, diffs, addedFiles } = snapshot;
 
     for (const change of meta.changes || []) {
+      // When --only is set, skip files that don't match the patterns
+      if (onlyFiles && !matchesOnly(change.filePath, onlyFiles)) {
+        continue;
+      }
+
       const absPath = path.join(projectDir, change.filePath);
 
       if (change.type === 'added') {
@@ -102,6 +123,7 @@ function rollback(projectDir, targetNumber, options = {}) {
   }
 
   // Create a rollback snapshot to record the action
+  const isPartial = !!onlyFiles;
   const timestamp = Date.now();
   const id = shortId();
   const rollbackName = `${timestamp}-${id}`;
@@ -110,14 +132,21 @@ function rollback(projectDir, targetNumber, options = {}) {
     id,
     name: rollbackName,
     number: Math.max(...snapshots.map((s) => s.number)) + 1,
-    label: `rollback to #${targetNumber}`,
+    label: isPartial
+      ? `partial rollback to #${targetNumber} (${onlyFiles.join(', ')})`
+      : `rollback to #${targetNumber}`,
     status: 'active',
     type: 'rollback',
+    partialRollback: isPartial,
     rollbackTarget: targetNumber,
     undoneSnapshots: toUndo.map((s) => s.number),
     changes: [],
     totalSize: 0,
   };
+
+  if (isPartial) {
+    rollbackMeta.onlyFiles = onlyFiles;
+  }
 
   saveSnapshot(projectDir, rollbackName, rollbackMeta, {}, {});
 
@@ -129,6 +158,7 @@ function rollback(projectDir, targetNumber, options = {}) {
     filesRemoved,
     filesModified,
     filesRestored,
+    partialRollback: isPartial,
   };
 }
 
