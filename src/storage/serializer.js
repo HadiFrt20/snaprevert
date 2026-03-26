@@ -113,6 +113,8 @@ function listSnapshots(projectDir) {
     }
   }
 
+  // Sort by number (stable ordering even when timestamps collide)
+  snapshots.sort((a, b) => (a.number || 0) - (b.number || 0));
   return snapshots;
 }
 
