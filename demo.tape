@@ -1,123 +1,110 @@
 Output demo.gif
 
-Set Shell "bash"
-Set FontSize 16
-Set Width 900
-Set Height 600
-Set Theme "Catppuccin Mocha"
-Set Padding 20
-Set TypingSpeed 40ms
+Require snaprevert
 
-# Title
-Type "# snaprevert - the undo button for AI coding"
+Set Shell "bash"
+Set FontSize 15
+Set Width 1000
+Set Height 650
+Set Theme "Catppuccin Mocha"
+Set Padding 15
+Set TypingSpeed 35ms
+Set CursorBlink false
+
+# Hidden: run setup script, cd into project, set PATH
+Hide
+Type "source /Users/hadi.farhat/Documents/Explore/snaprevert/scripts/demo-init.sh && cd /tmp/demo-app && export PATH=/Users/hadi.farhat/Documents/Explore/snaprevert/scripts:$PATH && clear"
 Enter
-Sleep 1s
+Sleep 2s
+Show
+
+# --- Show project ---
+Type "ls"
+Enter
+Sleep 1.5s
+
+Type "cat app.js"
+Enter
+Sleep 2.5s
+
+# --- Start snaprevert ---
+Type "snaprevert snap --label 'v1: working express app'"
+Enter
+Sleep 2s
+
+Type "snaprevert watch &"
+Enter
+Sleep 2.5s
+
 Type "clear"
 Enter
 Sleep 500ms
 
-# Create a demo project
-Type "mkdir my-app && cd my-app"
+# --- Claude adds auth ---
+Type "claude -p 'add authentication with login route and middleware'"
 Enter
-Sleep 500ms
+Sleep 3.5s
 
-Type "echo 'console.log(1)' > app.js"
-Enter
-Sleep 300ms
-
-Type "echo 'port = 3000' > config.js"
-Enter
-Sleep 300ms
-
-Type "echo '# routes' > routes.js"
-Enter
-Sleep 500ms
-
-# Initialize snaprevert and create first snapshot
-Type "snaprevert snap --label 'initial project setup'"
+Type "ls"
 Enter
 Sleep 2s
 
-# Show the snapshot
-Type "snaprevert list"
-Enter
-Sleep 2s
+Sleep 4s
 
-# Simulate AI making changes
-Type@50ms "# AI assistant rewrites your code..."
-Enter
-Sleep 1s
-
-Type "echo 'const app = require(express)' > app.js"
-Enter
-Sleep 300ms
-
-Type "echo 'port = 8080' > config.js"
-Enter
-Sleep 300ms
-
-Type "echo 'router = express.Router()' > routes.js"
-Enter
-Sleep 300ms
-
-Type "echo 'stripe = require(stripe)' > payments.js"
-Enter
-Sleep 500ms
-
-Type "snaprevert snap --label 'AI: added express + payments'"
-Enter
-Sleep 2s
-
-# More AI changes that break things
-Type@50ms "# AI makes more changes that break everything..."
-Enter
-Sleep 1s
-
-Type "echo 'BROKEN CODE %%%' > app.js"
-Enter
-Sleep 300ms
-
-Type "rm config.js"
-Enter
-Sleep 300ms
-
-Type "snaprevert snap --label 'AI: refactor attempt (broken)'"
-Enter
-Sleep 2s
-
-# Show all snapshots
 Type "snaprevert list"
 Enter
 Sleep 3s
 
-# Show what changed
-Type "snaprevert diff 3"
+# --- Claude breaks things ---
+Type "claude -p 'refactor the entire project to TypeScript'"
 Enter
-Sleep 3s
+Sleep 3.5s
 
-# Roll back!
-Type@50ms "# Everything is broken. Lets go back!"
-Enter
-Sleep 1s
-
-Type "snaprevert back 1 --yes"
-Enter
-Sleep 2s
-
-# Verify
 Type "cat app.js"
 Enter
-Sleep 1.5s
+Sleep 2.5s
 
-Type "cat config.js"
+Type "ls"
+Enter
+Sleep 2s
+
+Sleep 4s
+
+Type "snaprevert list"
+Enter
+Sleep 3s
+
+# --- Rollback ---
+Type "# config.js gone. auth.js gone. app.js broken. Roll it back."
+Enter
+Sleep 2s
+
+Type "snaprevert back 2 --yes"
+Enter
+Sleep 2.5s
+
+# --- Verify restore ---
+Type "ls"
 Enter
 Sleep 1.5s
 
-# Show status
+Type "cat app.js"
+Enter
+Sleep 2.5s
+
+Type "cat auth.js"
+Enter
+Sleep 2.5s
+
 Type "snaprevert status"
 Enter
 Sleep 3s
 
-Type@50ms "# Back to working code in under 1 second!"
+# --- Cleanup ---
+Hide
+Type "kill %1 2>/dev/null"
 Enter
-Sleep 2s
+Sleep 500ms
+Show
+
+Sleep 1s

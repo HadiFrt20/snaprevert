@@ -7,6 +7,8 @@
 Auto-snapshots your project every time AI touches your code.
 Instant rollback when things break. Zero config.
 
+*Claude Code adds auth, then breaks the project with a TypeScript refactor. snaprevert rolls it back instantly.*
+
 ![demo](demo.gif)
 
 [![CI](https://github.com/HadiFrt20/snaprevert/actions/workflows/ci.yml/badge.svg)](https://github.com/HadiFrt20/snaprevert/actions/workflows/ci.yml)
