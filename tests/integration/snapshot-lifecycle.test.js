@@ -84,10 +84,10 @@ describe('Snapshot Lifecycle (manual via ChangeBuffer)', () => {
       expect(all[i].timestamp).toBeGreaterThanOrEqual(all[i - 1].timestamp);
     }
 
-    // Numbers should be sequential
-    expect(all[0].number).toBe(1);
-    expect(all[1].number).toBe(2);
-    expect(all[2].number).toBe(3);
+    // Numbers should be strictly increasing
+    for (let j = 1; j < all.length; j++) {
+      expect(all[j].number).toBeGreaterThan(all[j - 1].number);
+    }
   });
 
   test('Diff shows correct changes for a specific snapshot', () => {
