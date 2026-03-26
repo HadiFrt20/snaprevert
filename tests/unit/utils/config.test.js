@@ -1,8 +1,7 @@
 const fs = require('fs');
-const path = require('path');
 const { createTempProject } = require('../../helpers/temp-project');
 const store = require('../../../src/storage/store');
-const { DEFAULTS, loadConfig, saveConfig, updateConfig, resetConfig, getConfigPath } = require('../../../src/utils/config');
+const { DEFAULTS, loadConfig, updateConfig, resetConfig, getConfigPath } = require('../../../src/utils/config');
 
 describe('config', () => {
   let project;

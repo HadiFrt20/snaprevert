@@ -1,8 +1,7 @@
-const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists, sleep } = require('../helpers/temp-project');
+const { createTempProject, addFile, modifyFile, deleteFile } = require('../helpers/temp-project');
 const { ChangeBuffer } = require('../../src/watcher/change-buffer');
 const { listSnapshots, loadSnapshot } = require('../../src/storage/serializer');
 const store = require('../../src/storage/store');
-const { computeDiff } = require('../../src/storage/differ');
 
 describe('Snapshot Lifecycle (manual via ChangeBuffer)', () => {
   let project;

@@ -1,9 +1,8 @@
 const chalk = require('chalk');
-const path = require('path');
 const { Watcher } = require('../watcher/watcher');
-const { init, isInitialized } = require('../storage/store');
+const { init } = require('../storage/store');
 
-module.exports = function watch(opts) {
+module.exports = function watch(_opts) {
   const projectDir = process.cwd();
 
   init(projectDir);

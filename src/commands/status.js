@@ -4,7 +4,7 @@ const { isInitialized, getTotalSize } = require('../storage/store');
 const { getCurrentState } = require('../engine/state');
 const { renderStatus } = require('../formatter/status-renderer');
 
-module.exports = function status(opts) {
+module.exports = function status(_opts) {
   const projectDir = process.cwd();
 
   if (!isInitialized(projectDir)) {

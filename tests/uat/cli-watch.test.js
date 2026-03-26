@@ -73,13 +73,12 @@ describe('CLI: watch command', () => {
 
     proc.kill('SIGINT');
 
-    const exitCode = await new Promise((resolve) => {
-      proc.on('exit', (code) => resolve(code));
-      setTimeout(() => resolve(null), 3000);
+    await new Promise((resolve) => {
+      proc.on('exit', () => resolve());
+      setTimeout(() => resolve(), 3000);
     });
 
-    // Process should exit (code 0 or null from signal)
-    // The key assertion is that it doesn't hang
+    // Process should exit without hanging
     expect(true).toBe(true);
   }, 10000);
 

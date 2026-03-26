@@ -1,10 +1,9 @@
-const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists, sleep } = require('../helpers/temp-project');
-const { buildIgnoreFilter, DEFAULT_IGNORES, matchPattern } = require('../../src/watcher/ignore');
+const { createTempProject, addFile, sleep } = require('../helpers/temp-project');
+const { buildIgnoreFilter } = require('../../src/watcher/ignore');
 const { Watcher } = require('../../src/watcher/watcher');
 const { listSnapshots } = require('../../src/storage/serializer');
 const store = require('../../src/storage/store');
 const path = require('path');
-const fs = require('fs');
 
 describe('Ignore Patterns', () => {
   let project;
@@ -59,7 +58,7 @@ describe('Ignore Patterns', () => {
     expect(filter(path.join(project.dir, 'src', 'index.js'))).toBe(true);
 
     // Verify with actual watcher
-    let snapshots = [];
+    const snapshots = [];
     watcher = new Watcher(project.dir, {
       debounceMs: 500,
       onSnapshot: (meta) => snapshots.push(meta),

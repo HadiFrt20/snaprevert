@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { createTempProject, addFile, fileExists, readFile } = require('../../helpers/temp-project');
 const store = require('../../../src/storage/store');
-const { saveSnapshot, listSnapshots, loadSnapshot } = require('../../../src/storage/serializer');
+const { saveSnapshot, listSnapshots } = require('../../../src/storage/serializer');
 const { computeDiff } = require('../../../src/storage/differ');
 const { rollback } = require('../../../src/engine/rollback');
 

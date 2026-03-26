@@ -1,8 +1,6 @@
-const fs = require('fs');
-const path = require('path');
 const { createTempProject, addFile, fileExists, readFile } = require('../../helpers/temp-project');
 const store = require('../../../src/storage/store');
-const { saveSnapshot, listSnapshots, updateSnapshotMeta } = require('../../../src/storage/serializer');
+const { saveSnapshot, listSnapshots } = require('../../../src/storage/serializer');
 const { restore } = require('../../../src/engine/restore');
 const { rollback } = require('../../../src/engine/rollback');
 
@@ -58,7 +56,7 @@ describe('restore', () => {
   });
 
   test('restore updates snapshot status to restored', () => {
-    const snap2Name = createAddedSnapshot(1, 'base.js', 'base', 1000000001);
+    createAddedSnapshot(1, 'base.js', 'base', 1000000001);
     createAddedSnapshot(2, 'extra.js', 'extra', 1000000002);
 
     rollback(project.dir, 1);
@@ -123,7 +121,7 @@ describe('restore', () => {
 
     const snapsAfter = listSnapshots(project.dir);
     // All originally active snapshots after #1 should now be rolled back
-    const stillActiveAfter1 = snapsAfter.filter(
+    snapsAfter.filter(
       (s) => s.number > 1 && s.status === 'active' && s.type !== 'rollback'
     );
     // The new rollback snapshot itself is active, but the old ones are rolled back

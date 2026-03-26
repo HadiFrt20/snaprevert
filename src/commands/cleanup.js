@@ -13,7 +13,7 @@ module.exports = function cleanup(opts) {
   }
 
   const config = loadConfig(projectDir);
-  let snapshots = listSnapshots(projectDir);
+  const snapshots = listSnapshots(projectDir);
   snapshots.sort((a, b) => a.timestamp - b.timestamp); // oldest first
 
   const MIN_KEEP = 5;

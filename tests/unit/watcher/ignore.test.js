@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { createTempProject } = require('../../helpers/temp-project');
-const { buildIgnoreFilter, parseIgnoreFile, DEFAULT_IGNORES } = require('../../../src/watcher/ignore');
+const { buildIgnoreFilter, parseIgnoreFile } = require('../../../src/watcher/ignore');
 
 describe('ignore', () => {
   let project;

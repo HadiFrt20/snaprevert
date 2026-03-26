@@ -134,14 +134,12 @@ function computeHunks(oldLines, newLines) {
     const contextBefore = 3;
     const contextAfter = 3;
 
-    let hunkStart = i;
-    let oldStart = Math.max(0, edits[i].oldIndex - contextBefore);
-    let newStart = Math.max(0, edits[i].newIndex - contextBefore);
+    const oldStart = Math.max(0, edits[i].oldIndex - contextBefore);
+    const newStart = Math.max(0, edits[i].newIndex - contextBefore);
 
     // Collect edits that are close together into one hunk
-    let hunkEdits = [];
+    const hunkEdits = [];
     let lastOldEnd = -1;
-    let lastNewEnd = -1;
 
     while (i < edits.length) {
       const edit = edits[i];
@@ -155,10 +153,8 @@ function computeHunks(oldLines, newLines) {
 
       if (edit.type === 'delete') {
         lastOldEnd = edit.oldIndex;
-        lastNewEnd = edit.newIndex;
       } else if (edit.type === 'insert') {
         lastOldEnd = edit.oldIndex;
-        lastNewEnd = edit.newIndex;
       }
       i++;
     }
@@ -166,7 +162,6 @@ function computeHunks(oldLines, newLines) {
     // Build hunk lines
     const lines = [];
     let oldIdx = oldStart;
-    let newIdx = newStart;
     let editIdx = 0;
 
     // Sort edits by position
@@ -179,7 +174,6 @@ function computeHunks(oldLines, newLines) {
 
     editIdx = 0;
     oldIdx = oldStart;
-    newIdx = newStart;
 
     while (editIdx < hunkEdits.length) {
       const edit = hunkEdits[editIdx];
@@ -188,7 +182,6 @@ function computeHunks(oldLines, newLines) {
       while (oldIdx < edit.oldIndex && oldIdx < oldLines.length) {
         lines.push(' ' + oldLines[oldIdx]);
         oldIdx++;
-        newIdx++;
       }
 
       if (edit.type === 'delete') {
@@ -200,12 +193,10 @@ function computeHunks(oldLines, newLines) {
                hunkEdits[editIdx].type === 'insert' &&
                hunkEdits[editIdx].oldIndex === oldIdx) {
           lines.push('+' + newLines[hunkEdits[editIdx].newIndex]);
-          newIdx++;
           editIdx++;
         }
       } else if (edit.type === 'insert') {
         lines.push('+' + newLines[edit.newIndex]);
-        newIdx++;
         editIdx++;
       }
     }
@@ -215,7 +206,6 @@ function computeHunks(oldLines, newLines) {
     while (oldIdx < afterEnd) {
       lines.push(' ' + oldLines[oldIdx]);
       oldIdx++;
-      newIdx++;
     }
 
     // Count old and new lines

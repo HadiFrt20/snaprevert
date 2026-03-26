@@ -82,7 +82,6 @@ function parseIgnoreFile(filePath) {
 
 function matchPattern(filePath, pattern) {
   // Direct name match (matches at any depth)
-  const basename = path.basename(filePath);
   const parts = filePath.split('/');
 
   // Remove trailing slash for directory patterns

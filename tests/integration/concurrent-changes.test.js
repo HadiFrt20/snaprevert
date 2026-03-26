@@ -1,4 +1,4 @@
-const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists, sleep } = require('../helpers/temp-project');
+const { createTempProject, addFile, modifyFile, readFile, fileExists } = require('../helpers/temp-project');
 const { ChangeBuffer } = require('../../src/watcher/change-buffer');
 const { rollback } = require('../../src/engine/rollback');
 const { listSnapshots, loadSnapshot } = require('../../src/storage/serializer');

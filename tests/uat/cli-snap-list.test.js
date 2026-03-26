@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const { createTempProject, addFile } = require('../helpers/temp-project');
+const { createTempProject } = require('../helpers/temp-project');
 const store = require('../../src/storage/store');
 const { saveSnapshot } = require('../../src/storage/serializer');
 

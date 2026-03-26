@@ -1,8 +1,8 @@
-const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists, sleep } = require('../helpers/temp-project');
+const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists } = require('../helpers/temp-project');
 const { ChangeBuffer } = require('../../src/watcher/change-buffer');
 const { rollback } = require('../../src/engine/rollback');
 const { restore } = require('../../src/engine/restore');
-const { listSnapshots, loadSnapshot } = require('../../src/storage/serializer');
+const { listSnapshots } = require('../../src/storage/serializer');
 const store = require('../../src/storage/store');
 
 describe('Rollback and Restore', () => {

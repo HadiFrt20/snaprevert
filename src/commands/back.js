@@ -3,7 +3,7 @@ const readline = require('readline');
 const { listSnapshots } = require('../storage/serializer');
 const { isInitialized } = require('../storage/store');
 const { rollback } = require('../engine/rollback');
-const { timeAgo, formatSize } = require('../utils/timer');
+const { timeAgo } = require('../utils/timer');
 const { formatFileChanges } = require('../formatter/list-renderer');
 
 module.exports = async function back(number, opts) {
@@ -62,7 +62,7 @@ module.exports = async function back(number, opts) {
   }
 
   try {
-    const result = rollback(projectDir, num);
+    rollback(projectDir, num);
 
     for (const snap of toUndo) {
       console.log(chalk.gray(`  reverting snapshot #${snap.number}... done`));

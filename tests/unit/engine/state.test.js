@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 const { createTempProject } = require('../../helpers/temp-project');
 const store = require('../../../src/storage/store');
 const { getCurrentState, setCurrentState, loadState, DEFAULT_STATE } = require('../../../src/engine/state');

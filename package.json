@@ -10,7 +10,8 @@
     "test:unit": "jest --testPathPattern=unit --verbose",
     "test:integration": "jest --testPathPattern=integration --verbose",
     "test:uat": "jest --testPathPattern=uat --verbose",
-    "test:coverage": "jest --coverage --verbose"
+    "test:coverage": "jest --coverage --verbose",
+    "lint": "eslint src/ bin/ tests/"
   },
   "jest": {
     "testEnvironment": "node",
@@ -30,6 +31,7 @@
     "commander": "^11.0.0"
   },
   "devDependencies": {
+    "eslint": "^8.56.0",
     "jest": "^29.0.0"
   },
   "engines": {

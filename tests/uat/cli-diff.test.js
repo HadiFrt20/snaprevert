@@ -1,6 +1,6 @@
 const { execSync } = require('child_process');
 const path = require('path');
-const { createTempProject, addFile } = require('../helpers/temp-project');
+const { createTempProject } = require('../helpers/temp-project');
 const store = require('../../src/storage/store');
 
 const CLI_PATH = path.resolve(__dirname, '../../bin/snaprevert.js');

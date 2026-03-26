@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const { isInitialized } = require('../storage/store');
 const { restore } = require('../engine/restore');
 
-module.exports = function restoreCmd(number, opts) {
+module.exports = function restoreCmd(number, _opts) {
   const projectDir = process.cwd();
 
   if (!isInitialized(projectDir)) {

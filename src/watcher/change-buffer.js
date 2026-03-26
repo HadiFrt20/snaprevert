@@ -6,7 +6,7 @@
 const fs = require('fs');
 const path = require('path');
 const { computeDiff } = require('../storage/differ');
-const { saveSnapshot, listSnapshots, loadSnapshot } = require('../storage/serializer');
+const { saveSnapshot, listSnapshots } = require('../storage/serializer');
 const { init, getSnapshotsPath } = require('../storage/store');
 const { shortId } = require('../utils/hash');
 const { generateLabel } = require('../utils/labeler');

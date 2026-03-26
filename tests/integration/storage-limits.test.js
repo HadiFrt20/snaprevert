@@ -1,4 +1,4 @@
-const { createTempProject, addFile, modifyFile, deleteFile, readFile, fileExists, sleep } = require('../helpers/temp-project');
+const { createTempProject, addFile, modifyFile } = require('../helpers/temp-project');
 const { ChangeBuffer } = require('../../src/watcher/change-buffer');
 const { listSnapshots, loadSnapshot } = require('../../src/storage/serializer');
 const store = require('../../src/storage/store');
@@ -120,10 +120,10 @@ describe('Storage Limits', () => {
     const snap1 = buffer.createSnapshot([{ type: 'added', filePath: 'a.js' }]);
 
     addFile(project.dir, 'b.js', 'b\n');
-    const snap2 = buffer.createSnapshot([{ type: 'added', filePath: 'b.js' }]);
+    buffer.createSnapshot([{ type: 'added', filePath: 'b.js' }]);
 
     addFile(project.dir, 'c.js', 'c\n');
-    const snap3 = buffer.createSnapshot([{ type: 'added', filePath: 'c.js' }]);
+    buffer.createSnapshot([{ type: 'added', filePath: 'c.js' }]);
 
     // Manually age the first snapshot by modifying its timestamp
     const snapDir = path.join(store.getSnapshotsPath(project.dir), snap1.name);

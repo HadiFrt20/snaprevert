@@ -1,7 +1,7 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const { createTempProject, addFile } = require('../helpers/temp-project');
+const { createTempProject } = require('../helpers/temp-project');
 const store = require('../../src/storage/store');
 const { saveSnapshot } = require('../../src/storage/serializer');
 
@@ -13,14 +13,6 @@ function run(cmd, dir) {
     encoding: 'utf-8',
     env: { ...process.env, FORCE_COLOR: '0' },
   });
-}
-
-function runSafe(cmd, dir) {
-  try {
-    return { stdout: run(cmd, dir), exitCode: 0 };
-  } catch (err) {
-    return { stdout: err.stdout || '', stderr: err.stderr || '', exitCode: err.status };
-  }
 }
 
 /**
