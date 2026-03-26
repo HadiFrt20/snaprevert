@@ -140,10 +140,23 @@ snaprevert is tool-agnostic. It watches your filesystem, not your AI tool.
 - **Windsurf** - every Cascade change saved
 - **Any AI tool** that writes to your filesystem
 
-## FAQ
+## Why not just use git?
 
-**How is this different from git?**
-Git requires you to commit. snaprevert is automatic. Think of it as continuous autosave for your entire project, not just individual files.
+**Git requires intent. snaprevert requires nothing.**
+
+When you're in flow state with an AI tool, the loop is: prompt AI, review, prompt again, review, prompt again. Nobody stops to `git commit` between each prompt. By the time something breaks, you're 5-10 prompts deep with no checkpoint.
+
+|                | Git                                          | snaprevert                  |
+|----------------|----------------------------------------------|-----------------------------|
+| When it saves  | When you remember to commit                  | Automatically, every change |
+| Granularity    | Whatever you staged                          | Every AI prompt's changes   |
+| Cognitive cost | Must decide what to commit & write a message | Zero — it's invisible       |
+| Rollback UX    | git reflog, git reset, git stash...          | `snaprevert back 3`        |
+| Target user    | Developers who commit frequently             | Anyone who doesn't          |
+
+They're complementary, not competing. Git is for meaningful, curated history you push to a team. snaprevert is the continuous autosave between commits — like how Google Docs saves every keystroke but you still "publish" versions.
+
+## FAQ
 
 **Does it slow down my project?**
 No. Snapshot creation takes <100ms and only runs after file changes settle (debounce). The watcher uses native OS file events with zero polling.
