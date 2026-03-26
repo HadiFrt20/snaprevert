@@ -6,12 +6,12 @@
     "snaprevert": "./bin/snaprevert.js"
   },
   "scripts": {
-    "test": "jest --verbose",
-    "test:unit": "jest --testPathPattern=unit --verbose",
-    "test:integration": "jest --testPathPattern=integration --verbose",
-    "test:uat": "jest --testPathPattern=uat --verbose",
-    "test:coverage": "jest --coverage --verbose",
-    "lint": "eslint src/ bin/ tests/"
+    "test": "npx jest --verbose",
+    "test:unit": "npx jest --testPathPattern=unit --verbose",
+    "test:integration": "npx jest --testPathPattern=integration --verbose",
+    "test:uat": "npx jest --testPathPattern=uat --verbose",
+    "test:coverage": "npx jest --coverage --verbose",
+    "lint": "npx eslint src/ bin/ tests/"
   },
   "jest": {
     "testEnvironment": "node",
